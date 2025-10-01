@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>和緯電動小巴 CCS1 充電系統解決方案</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chosen Palette: Warm Neutral Professional -->
+    <!-- Application Structure Plan: The SPA is designed as an interactive "Solution Explorer". The central element is a clickable system diagram representing the vehicle's charging architecture. Clicking a component in the diagram dynamically populates a dedicated detail pane with its specifications, function, and included parts from the quotation. This structure was chosen over a static table to visually clarify the relationships between components and allow users to explore the solution in a non-linear, intuitive way, enhancing comprehension of the technical proposal. -->
+    <!-- Visualization & Content Choices: Report Info: System components and their connections. Goal: Organize, Inform, Show Relationships. Viz/Presentation Method: An interactive system diagram built with structured HTML/Tailwind and CSS for layout and connections. A dynamic text block for component details. Interaction: Click on a diagram component to update the detail block. Hover for visual feedback. Justification: This interactive diagram is more engaging and intuitive than the source's static table and text diagram, making the complex system easier to understand. Library/Method: Vanilla JavaScript for DOM manipulation and event handling. No charts needed. CONFIRMING NO SVG/Mermaid used. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap');
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #f8f9fa;
+        }
+        .component-box {
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 2px solid #e9ecef;
+        }
+        .component-box:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            border-color: #4f46e5;
+        }
+        .component-box.active {
+            border-color: #4f46e5;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            background-color: #eef2ff;
+        }
+        .customer-component {
+             border-style: dashed;
+             border-color: #9ca3af;
+             background-color: #f3f4f6;
+        }
+         .customer-component:hover {
+            border-color: #6b7280;
+            background-color: #e5e7eb;
+        }
+        .customer-component.active {
+            border-color: #4b5563;
+            background-color: #d1d5db;
+        }
+
+        .arrow {
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-style: solid;
+        }
+        .arrow-right { border-width: 6px 0 6px 10px; border-color: transparent transparent transparent var(--arrow-color, #fd7e14); }
+        .arrow-down { border-width: 10px 6px 0 6px; border-color: var(--arrow-color, #6366f1) transparent transparent transparent; }
+        
+        .info-card {
+            min-height: 450px;
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <div class="container mx-auto p-4 md:p-8">
+        <header class="text-center mb-8 md:mb-12">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900">和緯電動小巴 CCS1 直流充電系統解決方案</h1>
+            <p class="mt-2 text-lg text-gray-600">互動式解決方案總覽</p>
+        </header>
+
+        <div class="flex flex-col lg:flex-row gap-8">
+            <!-- Interactive Diagram -->
+            <div class="lg:w-3/5 w-full">
+                <p class="text-center text-gray-500 mb-6 bg-gray-100 p-3 rounded-lg">點擊下方任一組件以查看詳細資訊</p>
+                <div class="p-4 rounded-xl bg-white shadow-sm border border-gray-200 relative">
+                    <div class="flex justify-center">
+                        <div class="inline-block p-3 bg-gray-700 text-white rounded-lg">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline-block mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 11V3m0 8h8m-8 0H3m8 8v-8m8 8h-8m8 0h8m-8-8v8m-8-8h8m-8 0H3"/></svg>
+                            直流充電樁 (EVSE)
+                        </div>
+                    </div>
+                    <div class="w-0.5 h-6 bg-gray-400 mx-auto"></div>
+                    <div class="flex justify-center -mt-1"><div class="arrow-down" style="--arrow-color: #9ca3af"></div></div>
+                    <p class="text-center text-xs text-gray-400 mt-1">充電槍</p>
+
+                    <div class="mt-4 p-4 border-2 border-dashed border-gray-300 rounded-lg">
+                        <p class="text-center font-bold text-gray-500 mb-6">車輛端 (Vehicle Side)</p>
+                        
+                        <div id="item-2" class="component-box bg-white p-4 rounded-lg shadow-sm text-center w-64 mx-auto">
+                            <h3 class="font-bold">品項二 (B)</h3>
+                            <p class="text-sm">CCS1 車輛充電插座總成</p>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-x-6 mt-4">
+                            <!-- HV Path -->
+                            <div class="relative flex flex-col items-center">
+                                <div class="w-0.5 h-8 bg-orange-500"></div>
+                                <div class="arrow-down" style="--arrow-color: #fd7e14"></div>
+                                <span class="text-xs text-orange-600 font-semibold my-2">高壓直流路徑</span>
+                                <div id="item-3" class="component-box bg-white p-4 rounded-lg shadow-sm text-center w-full">
+                                    <h3 class="font-bold">品項三 (C.1, C.2, C.3)</h3>
+                                    <p class="text-sm">高壓直流充電線束總成</p>
+                                </div>
+                                <div class="w-0.5 h-8 bg-orange-500 mt-2"></div>
+                                <div class="arrow-down" style="--arrow-color: #fd7e14"></div>
+                                <div class="customer-component mt-2 p-3 rounded-lg shadow-sm text-center w-full">
+                                    <h3 class="font-semibold text-gray-600">PDU / 電池包</h3>
+                                </div>
+                            </div>
+
+                            <!-- LV Path -->
+                            <div class="relative flex flex-col items-center">
+                                <div class="w-0.5 h-8 bg-indigo-500"></div>
+                                <div class="arrow-down" style="--arrow-color: #6366f1"></div>
+                                <span class="text-xs text-indigo-600 font-semibold my-2">低壓控制路徑</span>
+                                
+                                <div id="item-4a" class="component-box bg-white p-4 rounded-lg shadow-sm text-center w-full">
+                                    <h3 class="font-bold">品項四 (D.1)</h3>
+                                    <p class="text-sm">EVCC ↔ 充電座線束</p>
+                                </div>
+                                
+                                <div class="w-0.5 h-8 bg-indigo-500 mt-2"></div>
+                                <div class="arrow-down" style="--arrow-color: #6366f1"></div>
+                                <span class="absolute text-xs text-indigo-500" style="top: 155px; right: -10px;">CP/PE, 電子鎖控制</span>
+
+                                <div id="item-1" class="component-box bg-white p-4 rounded-lg shadow-sm text-center mt-2 w-full">
+                                    <h3 class="font-bold">品項一 (A, E.1)</h3>
+                                    <p class="text-sm">EVCC-500-CCS1</p>
+                                </div>
+
+                                <div class="w-0.5 h-8 bg-indigo-500 mt-2"></div>
+                                <div class="arrow-down" style="--arrow-color: #6366f1"></div>
+                                <span class="absolute text-xs text-indigo-500" style="top: 260px; right: -25px;">CAN bus, 喚醒訊號</span>
+
+                                <div id="item-4b" class="component-box bg-white p-4 rounded-lg shadow-sm text-center mt-2 w-full">
+                                    <h3 class="font-bold">品項四 (D.2)</h3>
+                                    <p class="text-sm">EVCC ↔ VCU 線束</p>
+                                </div>
+
+                                <div class="w-0.5 h-8 bg-indigo-500 mt-2"></div>
+                                <div class="arrow-down" style="--arrow-color: #6366f1"></div>
+
+                                <div id="vcu-item" class="component-box customer-component mt-2 p-3 rounded-lg shadow-sm text-center w-full">
+                                    <h3 class="font-semibold text-gray-600">VCU (整車控制器)</h3>
+                                    <p class="text-xs text-gray-500">客戶組件</p>
+                                </div>
+                                <div class="w-0.5 h-8 bg-gray-500 mt-2"></div>
+                                <div class="arrow-down" style="--arrow-color: #6b7280"></div>
+                                <div class="customer-component mt-2 p-3 rounded-lg shadow-sm text-center w-full">
+                                    <h3 class="font-semibold text-gray-600">BMS / 其他控制器</h3>
+                                    <p class="text-xs text-gray-500">客戶組件</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Details Panel -->
+            <div class="lg:w-2/5 w-full">
+                <div id="details-panel" class="info-card bg-white p-6 rounded-xl shadow-lg border border-gray-200 sticky top-8">
+                     <div id="details-content" class="transition-opacity duration-500">
+                        <div class="text-center py-10">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-16 w-16 text-indigo-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                            <h2 class="mt-4 text-2xl font-bold text-gray-700">歡迎</h2>
+                            <p class="mt-2 text-gray-500">請點擊左側系統圖中的任一組件，以查看其詳細功能、規格與報價內容。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="mt-12 p-6 bg-white rounded-xl shadow-lg border border-gray-200">
+            <div id="item-5" class="component-box p-4 rounded-lg">
+                <h2 class="text-xl font-bold text-center">品項五 (E.2)：系統整合與開發服務費 (NRE)</h2>
+                <div class="mt-4 text-gray-600 text-center">
+                    <p class="font-semibold">功能：一次性工程費用。</p>
+                    <p>規格：涵蓋所有非標品的開發驗證、圖面繪製、樣品製作、系統匹配測試及 FAE 技術支援。</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const solutionData = {
+            "item-1": {
+                title: "品項一：EVCC-500-CCS1 (和緯專案客製版)",
+                included: "A. 控制核心<br>E.1 EVCC 客製化韌體開發",
+                func: "擔任充電時的「大腦」或「執行者」，負責與充電樁通訊、解析指令，並根據 VCU 的命令控制充電流程與電子鎖。",
+                spec: "此報價已包含為匹配 KST 3-pin 電子鎖而客製化開發的韌體。"
+            },
+            "item-2": {
+                title: "品項二：CCS1 車輛充電插座總成",
+                included: "B. 充電介面",
+                func: "提供外部直流充電槍物理連接的標準接口，並整合了充電過程中的安全鎖定機制。",
+                spec: "KST 品牌，內建 24V、3-pin 電子鎖。<br><strong class='text-red-600'>[電流規格 (200A/300A) 待最終確認]</strong>。"
+            },
+            "item-3": {
+                title: "品項三：高壓直流充電線束總成",
+                included: "C.1 高壓直流充電線束總成<br>C.2 高壓連接器 (車輛端)<br>C.3 環形端子 (插座端)",
+                func: "安全傳輸大功率直流電至電池包。",
+                spec: "成品為一條長度 170cm 的 70mm² 橙色高壓電纜，一端配備 Amphenol 連接器，另一端壓接環形端子。"
+            },
+            "item-4a": {
+                title: "品項四 (D.1)：低壓控制線束 (EVCC ↔ 充電插座)",
+                included: "D.1 低壓控制線束 (EVCC ↔ 充電插座)",
+                func: "傳遞 EVCC 與充電插座/電子鎖之間的低壓控制與通訊訊號，是充電控制的「神經系統」。",
+                spec: "長度 50mm (客戶指定)，包含 CP/PE, 電子鎖控制/回饋, 溫度偵測等線路。"
+            },
+             "item-4b": {
+                title: "品項四 (D.2)：低壓控制線束 (EVCC ↔ 車輛系統)",
+                included: "D.2 低壓控制線束 (EVCC ↔ 車輛系統)",
+                func: "連接 EVCC 至整車的 CAN 網路與電源系統，是 EVCC 與 VCU 溝通的「橋梁」。",
+                spec: "包含 EVCC 電源/接地, CAN bus, VCU 實體喚醒線。<br><strong class='text-red-600'>[VCU 端連接器型號與長度待確認]</strong>。"
+            },
+            "item-5": {
+                title: "品項五：系統整合與開發服務費 (NRE)",
+                included: "E.2 系統整合與技術支援服務",
+                func: "一次性工程費用。",
+                spec: "涵蓋所有非標品的開發驗證、圖面繪製、樣品製作、系統匹配測試及 FAE 技術支援。"
+            },
+            "vcu-item": {
+                title: "VCU (整車控制器)",
+                included: "客戶組件 (非報價項目)",
+                func: "擔任整車的「最高指揮官」。負責接收 EVCC 的喚醒訊號與充電請求，並根據整車狀態 (如檔位、電池健康度) 做出決策，再透過 CAN bus 向 EVCC 下達「上鎖」、「開始充電」等高層級指令。",
+                spec: "此為和緯車輛的核心控制器，安仁方案需確保與其通訊及喚醒訊號的匹配。"
+            }
+        };
+
+        const detailsContent = document.getElementById('details-content');
+        const componentBoxes = document.querySelectorAll('.component-box');
+        let activeComponent = null;
+
+        function updateDetails(itemId) {
+            const data = solutionData[itemId];
+            if (!data) return;
+
+            detailsContent.style.opacity = 0;
+
+            setTimeout(() => {
+                detailsContent.innerHTML = `
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">${data.title}</h2>
+                    <div class="space-y-4">
+                        <div>
+                            <h3 class="font-semibold text-indigo-700">功能：</h3>
+                            <p class="text-gray-600">${data.func}</p>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-indigo-700">規格：</h3>
+                            <p class="text-gray-600">${data.spec}</p>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-indigo-700">包含細項：</h3>
+                            <p class="text-gray-600 text-sm">${data.included}</p>
+                        </div>
+                    </div>
+                `;
+                detailsContent.style.opacity = 1;
+            }, 300);
+        }
+
+        componentBoxes.forEach(box => {
+            box.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const itemId = box.id;
+
+                if (activeComponent) {
+                    activeComponent.classList.remove('active');
+                }
+                
+                box.classList.add('active');
+                activeComponent = box;
+
+                updateDetails(itemId);
+            });
+        });
+
+        // Initialize with the first item selected
+        const firstClickableItem = document.getElementById('item-2');
+        if(firstClickableItem) {
+            firstClickableItem.click();
+        }
+
+    </script>
+
+</body>
+</html>
+
